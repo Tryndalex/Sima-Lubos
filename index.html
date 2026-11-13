@@ -305,7 +305,6 @@
         <img class="form-image" src="sal.png" alt="Svadobný pár v kreslenom štýle na svadobnom obrade">
         <input type="hidden" name="_subject" value="Svadobný dotazník – Šima a Ľuboš">
         <input type="hidden" name="harmonogram_json" id="scheduleJson" value="[]">
-        <input type="hidden" name="kontakt_formular_polozky_json" id="contactFormJson" value="[]">
         <div class="hidden-honeypot" aria-hidden="true">
           <label for="companyWebsite">Nevypĺňajte toto pole</label>
           <input id="companyWebsite" type="text" name="_gotcha" tabindex="-1" autocomplete="off">
@@ -657,24 +656,6 @@
       scheduleJson.value = JSON.stringify(events);
     }
 
-    const contactFormJson = document.getElementById("contactFormJson");
-
-    function updateContactFormJson() {
-      const section = document.getElementById("contactFormSection");
-      if (section.classList.contains("is-off")) {
-        contactFormJson.value = JSON.stringify({ vybrane_udaje: [], vlastne_otazky: "" });
-        return;
-      }
-      const selected = [...document.querySelectorAll('#guestFields input[type="checkbox"]:checked')]
-        .map(input => input.value);
-      const customQuestions = document.getElementById("vlastne_otazky_hostia").value.trim();
-      contactFormJson.value = JSON.stringify({
-        vybrane_udaje: selected,
-        vlastne_otazky: customQuestions,
-        zobrazit_vlastne_otazky: document.querySelector('[name="zobrazit_vlastne_otazky_hostia"]').value
-      });
-    }
-
     renderSections();
     for (let i = 0; i < 5; i += 1) addScheduleRow();
     document.getElementById("addSchedule").addEventListener("click", addScheduleRow);
@@ -685,18 +666,10 @@
 
     form.addEventListener("input", () => {
       updateScheduleJson();
-      updateContactFormJson();
     });
     form.addEventListener("change", () => {
       updateScheduleJson();
-      updateContactFormJson();
     });
-    document.addEventListener("click", event => {
-      if (event.target.closest("#contactFormSection .switch")) {
-        setTimeout(updateContactFormJson, 0);
-      }
-    });
-    updateContactFormJson();
 
     form.addEventListener("submit", async event => {
       event.preventDefault();
