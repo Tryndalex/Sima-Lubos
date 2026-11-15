@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5eee8">
+  <meta name="description" content="Svadobný dotazník – podklady na vytvorenie svadobnej webstránky Šimy a Ľuboša.">
+  <title>Svadobný dotazník | Sima & Ľuboš</title>
+  <style>
+    :root {
+      --paper: #fffdfa;
+      --ink: #29251f;
+      --muted: #655f4c;
+      --line: #e7c83d;
+      --accent: #df473d;
+      --accent-dark: #aa2e29;
+      --accent-pale: #fff0a8;
+      --green: #3d8b63;
+      --shadow: 0 18px 0 rgba(35, 91, 128, .18), 0 28px 60px rgba(28, 73, 99, .18);
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #83d0eb 0%, #c9edf1 42%, #fff0a2 100%);
+      background-attachment: fixed;
+      padding: 56px 18px 70px;
+    }
+
+    body::before, body::after {
+      content: "";
+      position: fixed;
+      z-index: -1;
+      pointer-events: none;
+      border: 1px solid rgba(151, 112, 101, .16);
+      border-radius: 50%;
+    }
+    body::before { width: 360px; height: 360px; top: -190px; right: -110px; box-shadow: 0 0 0 24px rgba(255,255,255,.10), 0 0 0 48px rgba(255,255,255,.08); }
+    body::after { width: 280px; height: 280px; bottom: -150px; left: -100px; box-shadow: 0 0 0 22px rgba(255,255,255,.10), 0 0 0 44px rgba(255,255,255,.07); }
+
+    .page { width: min(900px, 100%); margin: 0 auto; }
+    .form-card {
+      overflow: hidden;
+      background: #fffdf4;
+      border: 2px solid #28251f;
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+    .form-heading {
+      position: relative;
+      padding: 48px 54px 38px;
+      text-align: center;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(135deg, #ffe34f, #ffd52e);
+    }
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--accent);
+      font-size: .72rem;
+      font-weight: 750;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.25rem, 6vw, 3.7rem);
+      line-height: 1.06;
+      font-weight: 500;
+      letter-spacing: -.045em;
+      color: #25231f;
+    }
+    .ampersand { color: #df473d; font-style: italic; }
+    .heading-note { max-width: 530px; margin: 18px auto 0; color: var(--muted); font-size: .96rem; line-height: 1.65; }
+    .ornament { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 22px; color: #b18d7e; }
+    .ornament::before, .ornament::after { content: ""; width: 56px; height: 1px; background: #ddc9be; }
+    .ornament span { font-size: 1rem; }
+
+    form { padding: 34px 38px 40px; }
+    .intro-note { margin: 0 0 26px; color: var(--muted); font-size: .88rem; line-height: 1.6; }
+    .section {
+      margin: 0 0 19px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: #fff;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .section:focus-within { border-color: #c9aaa0; box-shadow: 0 0 0 3px rgba(152,111,104,.08); }
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 19px 22px;
+      background: #fdfaf7;
+      border-bottom: 1px solid var(--line);
+    }
+    .section-title-wrap { min-width: 0; }
+    .section-kicker { margin: 0 0 4px; color: #a48a80; font-size: .66rem; letter-spacing: .15em; font-weight: 750; text-transform: uppercase; }
+    .section h2 { margin: 0; font-family: Georgia, "Times New Roman", serif; color: #5d4944; font-size: 1.38rem; font-weight: 500; }
+    .section-description { margin: 5px 0 0; color: var(--muted); font-size: .8rem; line-height: 1.45; }
+    .section-body { padding: 21px 22px 23px; }
+
+    .visibility-control { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 8px; }
+    .visibility-label { color: var(--muted); font-size: .72rem; white-space: nowrap; }
+    .switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      padding: 3px;
+      border: 1px solid #e6d9d1;
+      border-radius: 999px;
+      background: #f5efeb;
+    }
+    .switch button {
+      min-width: 42px;
+      border: 0;
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: transparent;
+      color: #887b75;
+      font: inherit;
+      font-size: .72rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .18s, color .18s, box-shadow .18s;
+    }
+    .switch button[aria-pressed="true"] { color: white; background: var(--accent); box-shadow: 0 2px 6px rgba(90,60,50,.16); }
+    .switch button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, .add-row:focus-visible, .submit-button:focus-visible { outline: 3px solid rgba(152,111,104,.28); outline-offset: 2px; }
+
+    .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 16px; }
+    .field { min-width: 0; }
+    .field.full { grid-column: 1 / -1; }
+    .field-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px; }
+    .field label, .field-label { color: #5a4d49; font-size: .83rem; font-weight: 700; line-height: 1.35; }
+    .field .visibility-control { gap: 6px; }
+    .field .visibility-label { font-size: .65rem; }
+    .field .switch { padding: 2px; }
+    .field .switch button { min-width: 34px; padding: 4px 7px; font-size: .65rem; }
+    input[type="text"], input[type="email"], input[type="tel"], input[type="url"], input[type="date"], input[type="time"], textarea, select {
+      display: block;
+      width: 100%;
+      min-height: 44px;
+      padding: 11px 13px;
+      border: 1px solid #e5dbd5;
+      border-radius: 10px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      font-size: .88rem;
+      transition: border-color .18s, box-shadow .18s;
+    }
+    textarea { min-height: 108px; resize: vertical; line-height: 1.55; }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: #bd9588; box-shadow: 0 0 0 3px rgba(152,111,104,.09); }
+    input::placeholder, textarea::placeholder { color: #b4a8a1; }
+    .field-hint { margin: 6px 0 0; color: #9b8d86; font-size: .72rem; line-height: 1.45; }
+
+    .checklist-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .check-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      min-width: 0;
+      padding: 12px 13px;
+      border: 1px solid #eee5df;
+      border-radius: 11px;
+      background: #fefcfa;
+      color: #62534e;
+      font-size: .82rem;
+      line-height: 1.4;
+      cursor: pointer;
+      transition: border-color .18s, background .18s;
+    }
+    .check-option:has(input:checked) {
+      border-color: #c5a49a;
+      background: #fbf4f0;
+    }
+    .check-option input {
+      flex: 0 0 auto;
+      width: 17px;
+      height: 17px;
+      margin: 1px 0 0;
+      accent-color: var(--accent);
+    }
+    .checklist-note { margin: 0 0 13px; color: var(--muted); font-size: .8rem; line-height: 1.5; }
+
+    .schedule-list { display: grid; gap: 11px; }
+    .schedule-row {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) 110px auto;
+      align-items: end;
+      gap: 10px;
+      padding: 13px;
+      border: 1px solid #eee5df;
+      border-radius: 12px;
+      background: #fefcfa;
+    }
+    .schedule-number { align-self: center; color: #a58b80; font-family: Georgia,serif; font-size: 1.2rem; text-align: center; }
+    .schedule-control label { display: block; margin-bottom: 6px; color: #6f5e58; font-size: .7rem; font-weight: 700; }
+    .schedule-control input, .schedule-control select { min-height: 40px; font-size: .82rem; }
+    .schedule-time { min-width: 0; }
+    .schedule-visibility { align-self: center; }
+    .schedule-visibility .visibility-label { display: none; }
+    .custom-event { margin-top: 8px; display: none; }
+    .custom-event.visible { display: block; }
+    .schedule-actions { display: flex; justify-content: flex-start; margin-top: 14px; }
+    .add-row {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 15px; border: 1px dashed #c7aaa0; border-radius: 10px;
+      color: var(--accent-dark); background: #fbf6f2; font: inherit; font-size: .8rem; font-weight: 750; cursor: pointer;
+      transition: background .18s, border-color .18s;
+    }
+    .add-row:hover { background: var(--accent-pale); border-color: var(--accent); }
+    .add-icon { display: inline-grid; width: 20px; height: 20px; place-items: center; border-radius: 50%; color: white; background: var(--accent); font-size: 1rem; line-height: 1; }
+
+    .section.is-off .section-head { border-bottom: 0; }
+    .section.is-off .section-title-wrap { opacity: .62; }
+    .section.is-off .section-body { display: none; }
+    .section.is-off { background: #fcfaf8; }
+
+    .form-footer { display: flex; flex-direction: column; align-items: center; gap: 13px; padding-top: 8px; }
+    .submit-button {
+      display: inline-flex; justify-content: center; align-items: center; gap: 10px;
+      width: min(340px, 100%); min-height: 52px; padding: 14px 24px;
+      border: 0; border-radius: 999px; color: #fff; background: linear-gradient(135deg, #a77f74, #805952);
+      box-shadow: 0 9px 20px rgba(128,89,82,.2); font: inherit; font-size: .9rem; font-weight: 750; cursor: pointer;
+      transition: transform .18s, box-shadow .18s, opacity .18s;
+    }
+    .submit-button:hover { transform: translateY(-1px); box-shadow: 0 12px 24px rgba(128,89,82,.25); }
+    .submit-button:disabled { opacity: .65; cursor: wait; transform: none; }
+    .form-footnote { max-width: 560px; margin: 0; color: #9a8d86; text-align: center; font-size: .72rem; line-height: 1.5; }
+    .form-status { display: none; width: 100%; max-width: 620px; padding: 14px 16px; border-radius: 12px; font-size: .86rem; line-height: 1.5; text-align: center; }
+    .form-status.success { display: block; color: #315b47; background: #edf5ef; border: 1px solid #cfe2d4; }
+    .form-status.error { display: block; color: #8a3f38; background: #fbefed; border: 1px solid #efd0cb; }
+    .hidden-honeypot { position: absolute !important; left: -5000px !important; width: 1px !important; height: 1px !important; overflow: hidden !important; }
+
+    .form-heading { border-bottom-color: #28251f; }
+    .eyebrow, .section-kicker { color: #26789e; }
+    .heading-note, .section-description, .intro-note, .checklist-note { color: #655f4c; }
+    .section { border-color: #d7bc36; background: #fffef9; border-radius: 10px; }
+    .section-head { background: #fff1a8; border-bottom-color: #e7d36e; }
+    .section h2 { color: #29251f; }
+    .switch { border-color: #c9b454; background: #fff8d8; }
+    .switch button[aria-pressed="true"] { background: #df473d; }
+    .field label, .field-label { color: #29251f; }
+    input[type="text"], input[type="email"], input[type="tel"], input[type="url"], input[type="date"], input[type="time"], textarea, select { border-color: #b7cfd5; border-radius: 7px; }
+    input:focus, textarea:focus, select:focus { border-color: #2586ad; box-shadow: 0 0 0 3px rgba(37,134,173,.14); }
+    .check-option, .schedule-row { border-color: #e9d978; background: #fffdf2; color: #403b2f; border-radius: 8px; }
+    .check-option:has(input:checked) { border-color: #e0b916; background: #fff2a8; }
+    .check-option input { accent-color: #df473d; }
+    .add-row { border-color: #2586ad; border-radius: 8px; color: #1d6685; background: #edf9fc; }
+    .add-row:hover { background: #d9f2f8; border-color: #176786; }
+    .add-icon { background: #2586ad; }
+    .submit-button { border: 2px solid #28251f; border-radius: 8px; background: linear-gradient(135deg, #ed5146, #cf302c); box-shadow: 0 5px 0 #8e2924; }
+    .submit-button:hover { box-shadow: 0 7px 0 #8e2924; }
+    .form-image { display: block; width: 100%; height: clamp(190px, 34vw, 340px); margin: 0 0 25px; border: 2px solid #28251f; border-radius: 10px; object-fit: cover; object-position: 50% 40%; box-shadow: 0 5px 0 #f4cf2e; }
+
+    @media (max-width: 680px) {
+      body { padding: 20px 10px 34px; }
+      .form-card { border-radius: 20px; }
+      .form-heading { padding: 36px 20px 29px; }
+      form { padding: 21px 13px 27px; }
+      .form-image { height: 220px; margin-bottom: 21px; }
+      .section-head { align-items: flex-start; padding: 16px 14px; }
+      .section-body { padding: 17px 14px 19px; }
+      .section h2 { font-size: 1.22rem; }
+      .section-description { max-width: 250px; }
+      .section-head > .visibility-control { flex-direction: column; align-items: flex-end; gap: 5px; }
+      .section-head > .visibility-control .visibility-label { font-size: .62rem; }
+      .field-grid { grid-template-columns: 1fr; gap: 16px; }
+      .checklist-grid { grid-template-columns: 1fr; }
+      .field.full { grid-column: auto; }
+      .schedule-row { grid-template-columns: 27px minmax(0, 1fr) 88px; gap: 8px; padding: 10px; }
+      .schedule-visibility { grid-column: 2 / -1; justify-self: end; }
+      .schedule-visibility .visibility-label { display: inline; }
+      .schedule-visibility .visibility-control { flex-direction: row; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="form-card">
+      <header class="form-heading">
+        <p class="eyebrow">Svadobný dotazník</p>
+        <h1>Sima <span class="ampersand">&</span> Ľuboš</h1>
+        <p class="heading-note">Podklady na vytvorenie vašej svadobnej webstránky. Pri každej sekcii a informácii označte, či ju chcete zverejniť na webe. Nebojte sa, vaša svadobná stránka nebude vyzerať ako Simpsonovci; tento štýl je iba na tomto formulári.</p>
+        <div class="ornament" aria-hidden="true"><span>✦</span></div>
+      </header>
+
+      <form id="weddingForm" action="https://formspree.io/f/xnpdnlor" method="POST" novalidate>
+        <img class="form-image" src="sal.png" alt="Svadobný pár v kreslenom štýle na svadobnom obrade">
+        <input type="hidden" name="_subject" value="Svadobný dotazník – Šima a Ľuboš">
+        <input type="hidden" name="harmonogram_json" id="scheduleJson" value="[]">
+        <div class="hidden-honeypot" aria-hidden="true">
+          <label for="companyWebsite">Nevypĺňajte toto pole</label>
+          <input id="companyWebsite" type="text" name="_gotcha" tabindex="-1" autocomplete="off">
+        </div>
+
+        <p class="intro-note"><strong>Pokyn:</strong> Ak chcete, aby som niektorú informáciu zistil, pripravil alebo vygeneroval ja, napíšte do príslušného poľa iba <strong>XXX</strong>.</p>
+
+        <div id="sections"></div>
+
+        <section class="section" id="contactFormSection" data-section="kontakt_formular">
+          <div class="section-head">
+            <div class="section-title-wrap">
+              <p class="section-kicker">12 · Informácie od hostí</p>
+              <h2>Kontaktný formulár pre hostí</h2>
+              <p class="section-description">Vyberte, ktoré informácie majú hostia vyplniť vo formulári na vašej svadobnej stránke.</p>
+            </div>
+            <div class="visibility-control">
+              <span class="visibility-label">Zobraziť sekciu?</span>
+              <div class="switch" role="group" aria-label="Zobraziť kontaktný formulár pre hostí na stránke">
+                <button type="button" data-value="yes" aria-pressed="true">Áno</button>
+                <button type="button" data-value="no" aria-pressed="false">Nie</button>
+              </div>
+              <input type="hidden" name="sekcia_kontakt_formular_zobrazit" value="Áno">
+            </div>
+          </div>
+          <div class="section-body">
+            <p class="checklist-note">Zaškrtnite iba tie údaje, ktoré chcete od hostí požadovať. Podľa výberu pripravíme polia kontaktného formulára na vašej stránke.</p>
+            <div class="checklist-grid" id="guestFields">
+              <label class="check-option"><input type="checkbox" name="udaje_hostia[]" value="Meno a priezvisko"><span>Meno a priezvisko</span></label>
+              <label class="check-option"><input type="checkbox" name="udaje_hostia[]" value="E-mail"><span>E-mail</span></label>
+              <label class="check-option"><input type="checkbox" name="udaje_hostia[]" value="Telefónne číslo"><span>Telefónne číslo</span></label>
+              <label class="check-option"><input type="checkbox" name="udaje_hostia[]" value="Potvrdenie účasti"><span>Potvrdenie účasti (áno / nie)</span></label>
+              <label class="check-option"><input type="checkbox" name="udaje_hostia[]" value="Počet dospelých osôb"><span>Počet dospelých osôb</span></label>
+              <label class="check-option"><input type="checkbox" name="udaje_hostia[]" value="Počet detí"><span>Počet detí</span></label>
+              <label class="check-option"><input type="checkbox" name="udaje_hostia[]" value="Mená detí a vek"><span>Mená detí a ich vek</span></label>
+              <label class="check-option"><input type="checkbox" name="udaje_hostia[]" value="Potravinové alergie"><span>Potravinové alergie</span></label>
+              <label class="check-option"><input type="checkbox" name="udaje_hostia[]" value="Diétne a stravovacie obmedzenia"><span>Diétne a stravovacie obmedzenia</span></label>
+              <label class="check-option"><input type="checkbox" name="udaje_hostia[]" value="Výber jedla"><span>Výber jedla</span></label>
+              <label class="check-option"><input type="checkbox" name="udaje_hostia[]" value="Vegetariánska alebo vegánska strava"><span>Vegetariánska / vegánska strava</span></label>
+              <label class="check-option"><input type="checkbox" name="udaje_hostia[]" value="Záujem o zabezpečenie dopravy"><span>Záujem o zabezpečenie dopravy</span></label>
+              <label class="check-option"><input type="checkbox" name="udaje_hostia[]" value="Záujem o ubytovanie"><span>Záujem o ubytovanie</span></label>
+              <label class="check-option"><input type="checkbox" name="udaje_hostia[]" value="Účasť na večernom programe"><span>Účasť na večernom programe</span></label>
+              <label class="check-option"><input type="checkbox" name="udaje_hostia[]" value="Odkaz alebo želanie pre novomanželov"><span>Odkaz alebo želanie pre novomanželov</span></label>
+            </div>
+            <div class="field full" data-field="vlastne_otazky_hostia" style="margin-top:18px">
+              <div class="field-top">
+                <label for="vlastne_otazky_hostia">Vlastné otázky pre hostí</label>
+                <div class="visibility-control">
+                  <span class="visibility-label">Zobraziť na webe</span>
+                  <div class="switch" role="group" aria-label="Zobraziť vlastné otázky na webe">
+                    <button type="button" data-value="yes" aria-pressed="true">Áno</button>
+                    <button type="button" data-value="no" aria-pressed="false">Nie</button>
+                  </div>
+                  <input type="hidden" name="zobrazit_vlastne_otazky_hostia" value="Áno">
+                </div>
+              </div>
+              <textarea id="vlastne_otazky_hostia" name="vlastne_otazky_hostia" placeholder="Napíšte vlastné otázky, ktoré majú hostia zodpovedať. Každú otázku uveďte na samostatný riadok."></textarea>
+              <p class="field-hint">Môžete doplniť ľubovoľný počet vlastných otázok. Napríklad: Máte zabezpečený odvoz? Prídete aj na večernú zábavu?</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="scheduleSection" data-section="harmonogram">
+          <div class="section-head">
+            <div class="section-title-wrap">
+              <p class="section-kicker">13 · Program dňa</p>
+              <h2>Harmonogram</h2>
+              <p class="section-description">Napíšte udalosti v poradí, v akom budú počas svadobného dňa nasledovať.</p>
+            </div>
+            <div class="visibility-control">
+              <span class="visibility-label">Zobraziť sekciu?</span>
+              <div class="switch" role="group" aria-label="Zobraziť harmonogram na stránke">
+                <button type="button" data-value="yes" aria-pressed="true">Áno</button>
+                <button type="button" data-value="no" aria-pressed="false">Nie</button>
+              </div>
+              <input type="hidden" name="sekcia_harmonogram_zobrazit" value="Áno">
+            </div>
+          </div>
+          <div class="section-body">
+            <div id="scheduleList" class="schedule-list"></div>
+            <div class="schedule-actions"><button type="button" class="add-row" id="addSchedule"><span class="add-icon">+</span> Pridať ďalšiu udalosť</button></div>
+            <p class="field-hint">Pri každej udalosti napíšte jej názov a podľa možnosti doplňte čas. Môžete pridať ľubovoľný počet udalostí.</p>
+          </div>
+        </section>
+
+        <section class="section" id="additionalSection" data-section="dodatocne">
+          <div class="section-head">
+            <div class="section-title-wrap">
+              <p class="section-kicker">14 · Záver</p>
+              <h2>Dodatočné informácie</h2>
+              <p class="section-description">Čokoľvek dôležité, čo sa nezmestilo do predchádzajúcich sekcií.</p>
+            </div>
+            <div class="visibility-control">
+              <span class="visibility-label">Zobraziť sekciu?</span>
+              <div class="switch" role="group" aria-label="Zobraziť dodatočné informácie na stránke">
+                <button type="button" data-value="yes" aria-pressed="true">Áno</button>
+                <button type="button" data-value="no" aria-pressed="false">Nie</button>
+              </div>
+              <input type="hidden" name="sekcia_dodatocne_zobrazit" value="Áno">
+            </div>
+          </div>
+          <div class="section-body">
+            <div class="field-grid">
+              <div class="field full" data-field="dodatocne_poznamky">
+                <div class="field-top"><label for="dodatocne_poznamky">Poznámky a špeciálne požiadavky</label><div class="visibility-control"><span class="visibility-label">Zobraziť na webe</span><div class="switch" role="group" aria-label="Zobraziť poznámky na webe"><button type="button" data-value="yes" aria-pressed="true">Áno</button><button type="button" data-value="no" aria-pressed="false">Nie</button></div><input type="hidden" name="zobrazit_dodatocne_poznamky" value="Áno"></div></div>
+                <textarea id="dodatocne_poznamky" name="dodatocne_poznamky" placeholder="Ďalšie informácie pre tvorbu webstránky…"></textarea>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="form-footer">
+          <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
+          <button class="submit-button" id="submitButton" type="submit">Odoslať vyplnený dotazník <span aria-hidden="true">→</span></button>
+          
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    const FORMSPREE_ENDPOINT = "https://formspree.io/f/xnpdnlor";
+
+    const sectionData = [
+      {
+        id: "zakladne", number: "01", title: "Základné informácie", description: "Základné údaje o vás a o svadobnom dni.",
+        fields: [
+          { id: "meno_nevesty", label: "Meno nevesty", type: "text", value: "Sima / Simona ?", placeholder: "Sima / Simona ?" },
+          { id: "meno_zenicha", label: "Meno ženícha", type: "text", value: "Ľuboš", placeholder: "Meno ženícha" },
+          { id: "datum_svadby", label: "Dátum svadby", type: "date" },
+          { id: "miesto_svadby", label: "Mesto alebo obec", type: "text", placeholder: "Napr. Bratislava" },
+          { id: "email", label: "Kontaktný e-mail", type: "email", placeholder: "vas@email.sk", hint: "Na tento e-mail môžeme poslať otázky k podkladom." },
+          { id: "kontakt_telefon", label: "Kontaktný telefón", type: "tel", placeholder: "+421…" },
+        ]
+      },
+      {
+        id: "uvod", number: "02", title: "Úvodná stránka", description: "Texty a hlavná fotografia, ktoré hostia uvidia ako prvé.",
+        fields: [
+          { id: "uvodny_nadpis", label: "Hlavný nadpis", type: "text", placeholder: "Napr. S radosťou vás pozývame…", full: true },
+          { id: "uvodny_podnadpis", label: "Krátky podnadpis alebo motto", type: "text", placeholder: "Vaše motto alebo krátka veta", full: true },
+          { id: "uvitaci_text", label: "Uvítací text", type: "textarea", placeholder: "Čo by ste chceli povedať návštevníkom webu?", full: true },
+          { id: "chcu_uvodnu_fotografiu", label: "Chcete mať na úvodnej stránke hlavnú fotografiu?", type: "select", options: ["Áno", "Nie"], full: true, hint: "Fotografiu nám dodáte neskôr." }
+        ]
+      },
+      {
+        id: "pribeh", number: "03", title: "Náš príbeh", description: "Informácie o vás, ktoré chcete predstaviť svadobným hosťom.",
+        fields: [
+          { id: "nadpis_pribehu", label: "Nadpis sekcie", type: "text", placeholder: "Napr. Náš spoločný príbeh" },
+          { id: "ako_sme_sa_spoznali", label: "Ako ste sa spoznali?", type: "textarea", placeholder: "Napíšte svoj príbeh…", full: true },
+          { id: "zasnuby", label: "Ako prebehli zásnuby?", type: "textarea", placeholder: "Môžete opísať aj krátku spomienku…", full: true },
+          { id: "chcu_fotografiu_pribehu", label: "Chcete pri vašom príbehu zobraziť spoločnú fotografiu?", type: "visibility", full: true, hint: "Fotografiu nám dodáte neskôr." }
+        ]
+      },
+      {
+        id: "obrad", number: "04", title: "Svadobný obrad", description: "Kedy a kde sa bude konať obrad a čo by mali hostia vedieť.",
+        fields: [
+          { id: "nazov_miesta_obradu", label: "Názov miesta obradu", type: "text", placeholder: "Názov kostola, úradu alebo miesta" },
+          { id: "adresa_obradu", label: "Adresa obradu", type: "text", placeholder: "Ulica, mesto", full: true },
+          { id: "cas_obradu", label: "Čas obradu", type: "time" },
+          { id: "chcu_mapu_obradu", label: "Chcete na stránke zobraziť mapu k miestu obradu?", type: "select", options: ["Áno", "Nie"], full: true },
+          { id: "informacie_obrad", label: "Ďalšie informácie k obradu", type: "textarea", placeholder: "Parkovanie, príchod hostí, špeciálne pokyny…", full: true }
+        ]
+      },
+      {
+        id: "hostina", number: "05", title: "Svadobná hostina", description: "Miesto oslavy a praktické informácie pre hostí.",
+        fields: [
+          { id: "nazov_miesta_hostiny", label: "Názov reštaurácie alebo sály", type: "text", placeholder: "Názov miesta" },
+          { id: "adresa_hostiny", label: "Adresa hostiny", type: "text", placeholder: "Ulica, mesto", full: true },
+          { id: "cas_hostiny", label: "Čas začiatku hostiny", type: "time" },
+          { id: "chcu_mapu_hostiny", label: "Chcete na stránke zobraziť mapu k miestu hostiny?", type: "select", options: ["Áno", "Nie"], full: true },
+          { id: "doprava_parkovanie", label: "Doprava a parkovanie", type: "textarea", placeholder: "Informácie o parkovaní, doprave alebo presune…", full: true }
+        ]
+      },
+      {
+        id: "galeria", number: "06", title: "Fotogaléria", description: "Rozhodnite sa, či chcete mať na svadobnej stránke fotogalériu.",
+        fields: [
+          { id: "chcu_fotogaleriu", label: "Chcete mať na svadobnej stránke fotogalériu?", type: "select", options: ["Áno", "Nie"], full: true, hint: "Fotografie alebo odkaz na album nám môžete dodať neskôr." }
+        ]
+      },
+      {
+        id: "ubytovanie", number: "07", title: "Ubytovanie", description: "Možnosti ubytovania alebo odporúčania pre hostí.",
+        fields: [
+          { id: "informacie_ubytovanie", label: "Informácie o ubytovaní", type: "textarea", placeholder: "Hotely, penzióny, ceny alebo odporúčania…", full: true },
+          { id: "odkaz_ubytovanie", label: "Odkaz na rezerváciu alebo ubytovanie", type: "url", placeholder: "https://…", full: true }
+        ]
+      },
+      {
+        id: "dresscode", number: "08", title: "Farebná paleta a štýl", description: "Zistíme, aké farby a vizuálny štýl sa vám páčia.",
+        fields: [
+          { id: "preferovana_paleta_farieb", label: "Máte preferovanú farebnú paletu?", type: "select", options: ["Áno", "Nie"], full: true },
+          { id: "popis_palety_farieb", label: "Ak áno, opíšte preferované farby alebo odtiene", type: "textarea", placeholder: "Napr. béžová, šalviová, zlatá…", full: true }
+        ]
+      },
+      {
+        id: "dary", number: "09", title: "Svadobné dary", description: "Ako si želáte informovať hostí o svadobných daroch?",
+        fields: [
+          { id: "preferencia_darov", label: "Čo preferujete?", type: "select", options: ["Finančný dar", "Vlastný zoznam darov", "Nemáme špeciálne želanie"], full: true },
+          { id: "zoznam_darov", label: "Ak máte vlastný zoznam darov, napíšte ho sem", type: "textarea", placeholder: "Zoznam darov alebo odkazy…", full: true }
+        ]
+      },
+      {
+        id: "faq", number: "10", title: "Časté otázky", description: "Odpovede na otázky, ktoré by hostia mohli mať.",
+        fields: [
+          { id: "casto_kladene_otazky", label: "Otázky a odpovede", type: "textarea", placeholder: "Každú otázku a odpoveď napíšte na samostatný riadok.\nNapr. Dokedy treba potvrdiť účasť? – Do…", full: true, hint: "Napríklad potvrdenie účasti, deti, parkovanie, fotografovanie alebo čas príchodu." }
+        ]
+      },
+      {
+        id: "kontakt", number: "11", title: "Kontakty na svadobný deň", description: "Osoby, na ktoré sa môžu hostia obrátiť v prípade potreby.",
+        fields: [
+          { id: "kontaktna_osoba", label: "Meno kontaktnej osoby", type: "text", placeholder: "Meno a priezvisko" },
+          { id: "telefon_kontaktnej_osoby", label: "Telefónne číslo", type: "tel", placeholder: "+421…" },
+          { id: "kontaktne_pokyny", label: "Ďalšie kontaktné informácie", type: "textarea", placeholder: "Kedy a v akých prípadoch kontaktovať túto osobu…", full: true }
+        ]
+      }
+    ];
+
+    const sectionsRoot = document.getElementById("sections");
+    const scheduleList = document.getElementById("scheduleList");
+    const scheduleJson = document.getElementById("scheduleJson");
+    let scheduleCount = 0;
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, ch => ({"&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"}[ch]));
+    }
+
+    function visibilityMarkup(name, label) {
+      return `<div class="visibility-control">
+        <span class="visibility-label">Zobraziť na webe</span>
+        <div class="switch" role="group" aria-label="${escapeHtml(label)} – viditeľnosť na stránke">
+          <button type="button" data-value="yes" aria-pressed="true">Áno</button>
+          <button type="button" data-value="no" aria-pressed="false">Nie</button>
+        </div>
+        <input type="hidden" name="zobrazit_${name}" value="Áno">
+      </div>`;
+    }
+
+    function renderField(field) {
+      const labelId = `field_${field.id}`;
+      const isTextarea = field.type === "textarea";
+      const isSelect = field.type === "select";
+      const isVisibilityOnly = field.type === "visibility";
+      const control = isVisibilityOnly
+        ? ""
+        : isTextarea
+          ? `<textarea id="${labelId}" name="${field.id}" placeholder="${escapeHtml(field.placeholder || "")}"></textarea>`
+          : isSelect
+            ? `<select id="${labelId}" name="${field.id}"><option value="">Vyberte možnosť…</option>${(field.options || []).map(option => `<option value="${escapeHtml(option)}">${escapeHtml(option)}</option>`).join("")}</select>`
+            : `<input id="${labelId}" name="${field.id}" type="${field.type}" value="${escapeHtml(field.value || "")}" placeholder="${escapeHtml(field.placeholder || "")}" ${field.type === "url" ? 'inputmode="url"' : ""}>`;
+      return `<div class="field ${field.full ? "full" : ""}" data-field="${field.id}">
+        <div class="field-top">
+          <label for="${labelId}">${escapeHtml(field.label)}</label>
+          ${visibilityMarkup(field.id, field.label)}
+        </div>
+        ${control}
+        ${field.hint ? `<p class="field-hint">${escapeHtml(field.hint)}</p>` : ""}
+      </div>`;
+    }
+
+    function renderSections() {
+      sectionsRoot.innerHTML = sectionData.map(section => `
+        <section class="section" data-section="${section.id}">
+          <div class="section-head">
+            <div class="section-title-wrap">
+              <p class="section-kicker">${section.number} · Svadobná webstránka</p>
+              <h2>${escapeHtml(section.title)}</h2>
+              <p class="section-description">${escapeHtml(section.description)}</p>
+            </div>
+            <div class="visibility-control">
+              <span class="visibility-label">Zobraziť sekciu?</span>
+              <div class="switch" role="group" aria-label="Zobraziť sekciu ${escapeHtml(section.title)} na stránke">
+                <button type="button" data-value="yes" aria-pressed="true">Áno</button>
+                <button type="button" data-value="no" aria-pressed="false">Nie</button>
+              </div>
+              <input type="hidden" name="sekcia_${section.id}_zobrazit" value="Áno">
+            </div>
+          </div>
+          <div class="section-body"><div class="field-grid">${section.fields.map(renderField).join("")}</div></div>
+        </section>`).join("");
+    }
+
+    function setSwitch(switchElement, value) {
+      const isYes = value === "yes";
+      switchElement.querySelectorAll("button[data-value]").forEach(button => {
+        button.setAttribute("aria-pressed", String(button.dataset.value === value));
+      });
+      const hidden = switchElement.parentElement.querySelector('input[type="hidden"]');
+      if (hidden) hidden.value = isYes ? "Áno" : "Nie";
+
+      const section = switchElement.closest(".section");
+      const isSectionSwitch = Boolean(section && switchElement.parentElement.classList.contains("visibility-control") && switchElement.parentElement.closest(".section-head"));
+      if (isSectionSwitch) {
+        section.classList.toggle("is-off", !isYes);
+        const body = section.querySelector(".section-body");
+        if (body) body.querySelectorAll("input, textarea, select, button").forEach(control => {
+          if (control.closest(".switch")) return;
+          control.disabled = !isYes;
+        });
+      }
+    }
+
+    document.addEventListener("click", event => {
+      const button = event.target.closest(".switch button[data-value]");
+      if (!button) return;
+      const switchElement = button.closest(".switch");
+      setSwitch(switchElement, button.dataset.value);
+    });
+
+    function addScheduleRow() {
+      scheduleCount += 1;
+      const number = scheduleCount;
+      const row = document.createElement("div");
+      row.className = "schedule-row";
+      row.dataset.scheduleRow = String(number);
+      row.innerHTML = `
+        <div class="schedule-number">${number}.</div>
+        <div class="schedule-control">
+          <label for="schedule_event_${number}">Udalosť</label>
+          <input id="schedule_event_${number}" class="schedule-event" type="text" placeholder="Napíšte udalosť…">
+        </div>
+        <div class="schedule-control schedule-time">
+          <label for="schedule_time_${number}">Čas</label>
+          <input id="schedule_time_${number}" class="schedule-time-input" type="time">
+        </div>
+        <div class="schedule-visibility">
+          ${visibilityMarkup(`harmonogram_${number}`, `Udalosť ${number}`)}
+        </div>`;
+      scheduleList.appendChild(row);
+      row.querySelector(".schedule-event").addEventListener("input", updateScheduleJson);
+      row.querySelector(".schedule-time-input").addEventListener("change", updateScheduleJson);
+      row.querySelectorAll(".switch button").forEach(btn => btn.addEventListener("click", () => setTimeout(updateScheduleJson, 0)));
+      updateScheduleJson();
+    }
+
+    function updateScheduleJson() {
+      if (document.getElementById("scheduleSection").classList.contains("is-off")) {
+        scheduleJson.value = "[]";
+        return;
+      }
+      const events = [...scheduleList.querySelectorAll(".schedule-row")].map(row => {
+        const eventName = row.querySelector(".schedule-event").value.trim();
+        const hidden = row.querySelector('input[type="hidden"]');
+        return {
+          poradie: Number(row.dataset.scheduleRow),
+          udalost: eventName,
+          cas: row.querySelector(".schedule-time-input").value,
+          zobrazit_na_webe: hidden ? hidden.value : "Áno"
+        };
+      }).filter(item => item.udalost || item.cas);
+      scheduleJson.value = JSON.stringify(events);
+    }
+
+    renderSections();
+    for (let i = 0; i < 5; i += 1) addScheduleRow();
+    document.getElementById("addSchedule").addEventListener("click", addScheduleRow);
+
+    const form = document.getElementById("weddingForm");
+    const statusBox = document.getElementById("formStatus");
+    const submitButton = document.getElementById("submitButton");
+
+    form.addEventListener("input", () => {
+      updateScheduleJson();
+    });
+    form.addEventListener("change", () => {
+      updateScheduleJson();
+    });
+
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+      statusBox.className = "form-status";
+      statusBox.textContent = "";
+      updateScheduleJson();
+
+      if (form.querySelector("#companyWebsite").value.trim()) return;
+      if (FORMSPREE_ENDPOINT.includes("YOUR_FORM_ID")) {
+        statusBox.className = "form-status error";
+        statusBox.textContent = "Formulár nie je správne nakonfigurovaný. Skontrolujte Formspree endpoint.";
+        statusBox.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      submitButton.disabled = true;
+      submitButton.textContent = "Odosielam…";
+      try {
+        const response = await fetch(FORMSPREE_ENDPOINT, {
+          method: "POST",
+          body: new FormData(form),
+          headers: { "Accept": "application/json" }
+        });
+        const result = await response.json().catch(() => ({}));
+        if (response.ok) {
+          statusBox.className = "form-status success";
+          statusBox.textContent = "Ďakujeme! Vyplnený dotazník bol úspešne odoslaný.";
+          submitButton.textContent = "Odoslané ✓";
+          statusBox.scrollIntoView({ behavior: "smooth", block: "center" });
+        } else {
+          const message = result.errors?.map(error => error.message).join(" ") || "Skontrolujte pripojenie alebo nastavenie Formspree a skúste to znova.";
+          throw new Error(message);
+        }
+      } catch (error) {
+        statusBox.className = "form-status error";
+        statusBox.textContent = `Formulár sa nepodarilo odoslať. ${error.message}`;
+        submitButton.disabled = false;
+        submitButton.textContent = "Odoslať vyplnený dotazník →";
+        statusBox.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    });
+  </script>
+</body>
+</html>
