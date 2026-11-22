@@ -395,10 +395,14 @@
       });
       navAnimation.addEventListener('DOMLoaded',()=>{
         navAnimation.goToAndStop(0,true);
-        window.setInterval(()=>{
+        const playNavAnimation=()=>{
           header.classList.add('nav-animation-active');
           navAnimation.goToAndPlay(0,true);
-        },30000);
+        };
+        window.setTimeout(()=>{
+          playNavAnimation();
+          window.setInterval(playNavAnimation,30000);
+        },6000);
       });
       navAnimation.addEventListener('complete',()=>header.classList.remove('nav-animation-active'));
       navAnimation.addEventListener('data_failed',()=>{
